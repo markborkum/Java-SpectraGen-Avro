@@ -1,0 +1,122 @@
+{
+	"namespace": "gov.pnnl.emsl.magres.spectra_gen",
+	"protocol": "SpectraGen",
+	"doc": "A protocol that lets you generate 1H FT-NMR spectra.",
+
+	"types": [{
+		"name": "Nucleus",
+		"type": "record",
+		"doc": "A resonant nucleus.",
+		"fields": [{
+			"name": "initialAmplitude",
+			"type": "double",
+			"doc": "The initial amplitude of the nucleus (dimensionless)."
+		}, {
+			"name": "signalFrequency",
+			"type": "double",
+			"doc": "The resonant frequency of the nucleus (Hertz)." 
+		}, {
+			"name": "relaxationTime",
+			"type": "double",
+			"doc": "The relaxation time constant of the nucleus (seconds)."
+		}, {
+			"name": "signalPhase",
+			"type": "double",
+			"doc": "The phase of the nucleus (radians)."
+		}]
+	}, {
+		"name": "Scan",
+		"type": "record",
+		"doc": "An individual scan.",
+		"fields": [{
+			"name": "acquisitions",
+			"type": "int",
+			"doc": "The number of acquisitions (power of two)."
+		}, {
+			"name": "quadPhaseShiftError",
+			"type": "double",
+			"doc": "The error in the quad phase shift of the instrument (radians)."
+		}, {
+			"name": "imaginaryAmplifierGainImbalance",
+			"type": "double",
+			"doc": "The gain imbalance (or relative error) in the imaginary channel amplifier of the instrument (%)." 
+		}, {
+			"name": "realChannelDC",
+			"type": "double",
+			"doc": "The DC in the real channel of the instrument (% of total amplitude)."
+		}, {
+			"name": "imaginaryChannelDC",
+			"type": "double",
+			"doc": "The DC in the imaginary channel of the instrument (% of total amplitude)."
+		}, {
+			"name": "noiseLevel",
+			"type": "double",
+			"doc": "The level of background noise in the signal (dimensionless)."
+		}, {
+			"name": "lineBroadeningFactor",
+			"type": "double",
+			"doc": "The line broadening factor for signal apodization (Hertz)."
+		}]
+	}, {
+		"name": "Parameters",
+		"type": "record",
+		"fields": [{
+			"name": "dataPoints",
+			"type": "int",
+			"doc": "The number of data points (power of two)."
+		}, {
+			"name": "zeroFills",
+			"type": "int",
+			"doc": "The number of zero-fills."
+		}, {
+			"name": "dwellTime",
+			"type": "double",
+			"doc": "The dwell time (seconds)."
+		}, {
+			"name": "nuclei",
+			"type": {
+				"type": "array",
+				"items": "Nucleus"
+			},
+			"doc": "The list of resonant nuclei."
+		}, {
+			"name": "scans",
+			"type": {
+				"type": "array",
+				"items": "Scan"
+			},
+			"doc": "The list of scans."
+		}]
+	}, {
+		"name": "Data",
+		"type": "record",
+		"fields": [{
+			"name": "values",
+			"type": {
+				"type": "array",
+				"items": {
+					"type": "array",
+					"items": "double"
+				}
+			}
+		}]
+	}, {
+		"name": "Message",
+		"type": "error",
+		"fields": [{
+			"name": "message",
+			"type": "string"
+		}]
+	}],
+
+	"messages": {
+		"call": {
+			"request": [{
+				"name": "parameters",
+				"type": "Parameters"
+			}],
+			"response": "Data",
+			"errors": ["Message"]
+		}
+	}
+}
